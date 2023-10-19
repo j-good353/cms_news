@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Content;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -39,6 +40,29 @@ class UserController extends Controller
     {
         $data['title'] = 'Login';
         return view('user/login', $data);
+    }
+
+    public function admin()
+    {
+        $data['title'] = 'Create Content';
+        return view('user/admin', $data);
+    }
+
+    public function admin_action(Request $request)
+    {
+        $request->validate([
+            'content_title' => 'required',
+            'content' => 'required',
+        ]);
+
+        $content = new Content([
+            'user_id' => $request->content_title,
+            'content_title' => $request->content_title,
+            'content' => $request->content,
+        ]);
+        $content->save();
+
+        return redirect()->route('home')->with('success', 'Content created success!');
     }
 
     public function login_action(Request $request)
